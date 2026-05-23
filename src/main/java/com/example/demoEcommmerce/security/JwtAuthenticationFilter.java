@@ -31,6 +31,15 @@ public class JwtAuthenticationFilter
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
+    
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request)
+            throws ServletException {
+
+        String path = request.getServletPath();
+
+        return path.startsWith("/api/auth");
+    }
 
     @Override
     protected void doFilterInternal(
@@ -38,14 +47,6 @@ public class JwtAuthenticationFilter
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-
-        String path = request.getServletPath();
-
-        // Skip auth APIs
-        if (path.startsWith("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         final String authHeader =
                 request.getHeader("Authorization");
