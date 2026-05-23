@@ -23,6 +23,8 @@ private UserRepository userRepository;
 private PasswordEncoder passwordEncoder;
 
 
+
+
 public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
@@ -41,10 +43,17 @@ public UserService(UserRepository userRepository, PasswordEncoder passwordEncode
 
 	public UserResponse addUser(UserRequest userRequest){
 // The reason why we use updateUserFromRequest is to update user with userRequest value (basically filling up)
-		User user  = new User();
+		User user = new User();
+
 		updateUserFromRequest(user, userRequest);
-        User savedUser = userRepository.save(user);
-        return mapToUserResponse(savedUser);
+
+		user.setPassword(
+		        passwordEncoder.encode(userRequest.getPassword())
+		);
+
+		User savedUser = userRepository.save(user);
+
+		return mapToUserResponse(savedUser);
 	} 
 	
 	public Optional<UserResponse> fetchUserById(Long id) {
