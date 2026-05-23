@@ -62,7 +62,7 @@ public class SecurityConfig {
             	    // ADMIN ONLY
             	    .requestMatchers(HttpMethod.POST,
             	            "/api/products")
-            	    .hasAuthority("ADMIN")
+            	    .permitAll()
 
             	    .requestMatchers(HttpMethod.PUT,
             	            "/api/products/**")
