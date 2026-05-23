@@ -39,62 +39,46 @@ public class SecurityConfig {
                     )
             )
             
-//
-//            .authorizeHttpRequests(auth -> auth
-//            		
-//            		 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//
-//            	    // Public APIs
-//            	    .requestMatchers(
-//            	            "/api/auth/**"
-//            	    ).permitAll()
-//
-//            	    // Product APIs
-//            	    .requestMatchers(HttpMethod.GET,
-//            	            "/api/products/**")
-//            	    .permitAll()
-//            	    
-//            	    .requestMatchers(
-//            	            HttpMethod.GET,
-//            	            "/api/orders/**"
-//            	    ).authenticated()
-//
-//            	    // ADMIN ONLY
-//            	    .requestMatchers(HttpMethod.POST,
-//            	            "/api/products")
-//            	    .hasAuthority("ADMIN")
-//
-//            	    .requestMatchers(HttpMethod.PUT,
-//            	            "/api/products/**")
-//            	    .hasAuthority("ADMIN")
-//
-//            	    .requestMatchers(HttpMethod.DELETE,
-//            	            "/api/products/**")
-//            	    .hasAuthority("ADMIN")
-//
-//            	    // Everything else requires login
-//            	    .anyRequest().authenticated()
-//            	)
-            
+
             .authorizeHttpRequests(auth -> auth
+            		
+            		 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            	    // Public APIs
+            	    .requestMatchers(
+            	            "/api/auth/**"
+            	    ).permitAll()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/auth/login").permitAll()
+            	    // Product APIs
+            	    .requestMatchers(HttpMethod.GET,
+            	            "/api/products/**")
+            	    .permitAll()
+            	    
+            	    .requestMatchers(
+            	            HttpMethod.GET,
+            	            "/api/orders/**"
+            	    ).authenticated()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/auth/register").permitAll()
+            	    // ADMIN ONLY
+            	    .requestMatchers(HttpMethod.POST,
+            	            "/api/products")
+            	    .hasAuthority("ADMIN")
 
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/products/**").permitAll()
+            	    .requestMatchers(HttpMethod.PUT,
+            	            "/api/products/**")
+            	    .hasAuthority("ADMIN")
 
-                    .anyRequest().authenticated()
-            )
-            .addFilterBefore(
-                    jwtAuthenticationFilter,
-                    UsernamePasswordAuthenticationFilter.class
-            );
+            	    .requestMatchers(HttpMethod.DELETE,
+            	            "/api/products/**")
+            	    .hasAuthority("ADMIN")
+
+            	    // Everything else requires login
+            	    .anyRequest().authenticated()
+            	);
+//            .addFilterBefore(
+//                    jwtAuthenticationFilter,
+//                    UsernamePasswordAuthenticationFilter.class
+//            );
 
 
         return http.build();
