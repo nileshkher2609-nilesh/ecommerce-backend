@@ -39,24 +39,28 @@ public class JwtAuthenticationFilter
             FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // Skip auth APIs
+        if (path.startsWith("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader =
                 request.getHeader("Authorization");
-//request.getHeader -> Read Authorization Header
+
         String jwt = null;
         String email = null;
 
-        // Check Bearer token
         if (authHeader != null &&
                 authHeader.startsWith("Bearer ")) {
 
             jwt = authHeader.substring(7);
-// authHeader.substring(7) -> Extract JWT and remove bearer
 
             email = jwtUtil.extractUsername(jwt);
-// extracting email from payload.
         }
 
-        // Authenticate user
         if (email != null &&
                 SecurityContextHolder
                         .getContext()
@@ -65,8 +69,6 @@ public class JwtAuthenticationFilter
             UserDetails userDetails =
                     userDetailsService
                             .loadUserByUsername(email);
-            System.out.println(userDetails.getAuthorities());
-// Fetched user from user DB.
 
             if (jwtUtil.validateToken(jwt,
                     userDetails.getUsername())) {
@@ -77,8 +79,6 @@ public class JwtAuthenticationFilter
                                 null,
                                 userDetails.getAuthorities()
                         );
-                
-//Represents authenticated user.
 
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource()
@@ -88,23 +88,9 @@ public class JwtAuthenticationFilter
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(authToken);
-                
-                System.out.println(
-                        SecurityContextHolder
-                                .getContext()
-                                .getAuthentication()
-                                .getAuthorities()
-                );
-//  SecurityContextHolder.getContext() -> You are telling spring this user is authenticated.
             }
         }
-        System.out.println("PATH: " + request.getServletPath());
 
-        System.out.println(
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-        );
         filterChain.doFilter(request, response);
     }
 }
