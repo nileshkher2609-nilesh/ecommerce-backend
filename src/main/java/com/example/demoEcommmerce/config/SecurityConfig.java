@@ -62,15 +62,15 @@ public class SecurityConfig {
             	    // ADMIN ONLY
             	    .requestMatchers(HttpMethod.POST,
             	            "/api/products")
-            	    .permitAll()
+            	    .hasRole("ADMIN")
 
             	    .requestMatchers(HttpMethod.PUT,
             	            "/api/products/**")
-            	    .hasAuthority("ADMIN")
+            	    .hasRole("ADMIN")
 
             	    .requestMatchers(HttpMethod.DELETE,
             	            "/api/products/**")
-            	    .hasAuthority("ADMIN")
+            	    .hasRole("ADMIN")
 
             	    // Everything else requires login
             	    .anyRequest().authenticated()
